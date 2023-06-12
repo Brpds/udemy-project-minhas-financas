@@ -1,0 +1,6 @@
+additions:
+ categories for income/expenses
+ visual underlines for said categories
+ conversion to float and positive/negative values
+ balance
+ hide/show balance button

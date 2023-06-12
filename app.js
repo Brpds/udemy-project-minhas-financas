@@ -1,11 +1,12 @@
 class Despesa {
-    constructor(ano, mes, dia, tipo, descricao, valor){
+    constructor(ano, mes, dia, tipo, descricao, valor, categoria){
         this.ano = ano
         this.mes = mes
         this.dia = dia
         this.tipo = tipo
         this.descricao = descricao
         this.valor = valor
+        this.categoria = categoria
     }
 
     validarDados(){
@@ -46,7 +47,7 @@ class Bd {
 
         let id = localStorage.getItem('id')
 
-        //recuperar todas as despesas cadastradsa em Lstorage
+        //recuperar todas as despesas cadastradas em Lstorage
         for(let i = 1; i <= id; i++){
             //recuperar a despesa
             let despesa = JSON.parse(localStorage.getItem(i))
@@ -109,6 +110,12 @@ class Bd {
             despesasFiltradas = despesasFiltradas.filter(d => d.valor == despesa.valor)
         }
 
+        //categoria
+        if(despesa.categoria != ''){
+            console.log('Fitro de Categoria')
+            despesasFiltradas = despesasFiltradas.filter(d => d.categoria == despesa.categoria)
+        }
+
         return despesasFiltradas
 
 
@@ -129,6 +136,7 @@ cadastrarDespesa = () => {
     let tipo = document.getElementById('tipo')
     let descricao = document.getElementById('descricao')
     let valor = document.getElementById('valor')
+    let categoria = document.getElementById('categoria')
     
     let despesa = new Despesa(
         ano.value,
@@ -136,7 +144,8 @@ cadastrarDespesa = () => {
         dia.value,
         tipo.value,
         descricao.value,
-        valor.value
+        valor.value,
+        categoria.value
     )
 
     if(despesa.validarDados()){
@@ -166,6 +175,7 @@ limparCampos = () =>{
     document.getElementById('tipo').value = ''
     document.getElementById('descricao').value = ''
     document.getElementById('valor').value = ''
+    document.getElementById('categoria').value = ''
     /*
         ---otimizado:---
     ano.value = ''
@@ -208,6 +218,8 @@ carregaListaDespesas = (despesas = [], filtro = false) => {
               </tr>
     */
 
+    //inicia o saldo
+    let saldo = 0
     //percorrer o array despesa listando de forma dinâmica
     despesas.forEach(function(d) { 
 
@@ -233,7 +245,24 @@ carregaListaDespesas = (despesas = [], filtro = false) => {
         }
         linha.insertCell(1).innerHTML = d.tipo
         linha.insertCell(2).innerHTML = d.descricao
+        //adiciona o valor positivo para receita e
+        //negativo para despesa
+        if(d.categoria == '1'){
+            d.valor = parseFloat(d.valor * -1).toFixed(2)
+        }else{
+            d.valor = parseFloat(d.valor * 1).toFixed(2)
+        }
+            
         linha.insertCell(3).innerHTML = d.valor
+        switch(d.categoria){
+            case '1': d.categoria = `<u style="text-decoration-color: red; text-decoration-thickness: 4px;">Despesa</u>`
+            break
+            case '2': d.categoria = `<u style="text-decoration-color: green; text-decoration-thickness: 4px;">Receita</u>`
+        }
+        linha.insertCell(4).innerHTML = d.categoria
+
+        //retorna o saldo atualizado com despesa e receita
+        saldo += parseFloat(d.valor)
 
         //criar o botão exclusão de despesa.
         let btn = document.createElement("button")
@@ -255,9 +284,11 @@ carregaListaDespesas = (despesas = [], filtro = false) => {
             window.location.reload()
 
         }
-        linha.insertCell(4).append(btn)
+        linha.insertCell(5).append(btn)
 
     })
+
+    document.getElementById('saldo').innerHTML = parseFloat(saldo).toFixed(2)
 }
 
 
@@ -268,10 +299,23 @@ pesquisarDespesa = () => {
     let tipo = document.getElementById('tipo').value
     let descricao = document.getElementById('descricao').value
     let valor = document.getElementById('valor').value
+    let categoria = document.getElementById('categoria').value
 
-    let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor)
+    let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor, categoria)
 
     let despesas = bd.pesquisar(despesa)
     
     this.carregaListaDespesas(despesas, true)
+}
+
+
+showHide = () => {
+    let saldo = document.getElementById('saldo')
+    if(saldo.style.display == '' || saldo.style.display == 'inline'){
+        saldo.style.display = 'none'
+        document.getElementById('showHideIcon').innerHTML = `<i class="fas fa-eye"></i>`
+    }else{
+        saldo.style.display = 'inline'
+        document.getElementById('showHideIcon').innerHTML = `<i class="fas fa-eye-slash"></i>`
+    }
 }

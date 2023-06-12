@@ -92,7 +92,7 @@
       </div>
 
       <div class="row  mb-5">
-        <div class="col-md-8">
+        <div class="col-md-6">
           <input type="text" class="form-control" placeholder="Descrição" id="descricao" />
         </div>
 
@@ -100,11 +100,28 @@
           <input type="text" class="form-control" placeholder="Valor" id="valor" />
         </div>
 
-        <div class="col-md-2 d-flex justify-content-end">
+        <div class="col-md-3">
+          <select class="form-control" id="categoria">
+            <option value="">Categoria</option>
+            <option class="text-danger" value="1">Despesa</option>
+            <option class="text-success" value="2">Receita</option>
+          </select>
+        </div>
+
+        <div class="col-md-1 d-flex justify-content-end">
           <button onclick="pesquisarDespesa()" type="button" class="btn btn-primary">
             <i class="fas fa-search"></i>
           </button>
         </div>
+      </div>
+
+      <div class="col-md-12 text-right">
+        <h3 class="">Saldo: <span id="saldo"></span>
+          <button id="showHideIcon" onclick="showHide()" type="button" class="btn">
+          <i class="fas fa-eye-slash"></i>
+        </button>
+      </h3>
+
       </div>
 
       <div class="row">
@@ -116,6 +133,7 @@
                 <th>Tipo</th>
                 <th>Descrição</th>
                 <th>Valor</th>
+                <th>Categoria</th>
                 <th></th>
               </tr>
             </thead>

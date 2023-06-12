@@ -92,15 +92,23 @@
       </div>
 
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
           <input type="text" class="form-control" placeholder="Descrição" id="descricao" />
+        </div>
+
+        <div class="col-md-3">
+          <select id="categoria" class="form-control">
+            <option value="">Categoria</option>
+            <option class="text-danger" value="1">Despesa</option>
+            <option class="text-success" value="2">Receita</option>
+          </select>
         </div>
 
         <div class="col-md-2">
           <input type="text" class="form-control" placeholder="Valor" id="valor" />
         </div>
 
-        <div class="col-md-2 d-flex justify-content-end">
+        <div class="col-md-1 d-flex justify-content-end">
           <button type="button" class="btn btn-primary" onclick="cadastrarDespesa()">
             <i class="fas fa-plus"></i>
           </button>
